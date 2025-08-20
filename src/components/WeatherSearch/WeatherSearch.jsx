@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 const WeatherSearch = (props) => {
   const [city, setCity] = useState("");
+  const [color, setColor] = useState('black')
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -10,47 +11,28 @@ const WeatherSearch = (props) => {
     setCity("");
   };
 
-   // useEffect can run under different conditins depending on the dependency array
-
-  // 1) If the dependency array is left out, the side effect function runs after every render.
-  useEffect(()=>{
+  // useEffect can run under different conditions depending on the dependency array
+  
+  // 1. If the dependency array is left out, the side effect function runs after every render
+  useEffect(() => {
     console.log('I run after every render or state change')
-  }) // has no dependecies so this runs everytime state changes
+  })
 
-  // 2) If the dependency array is empty ([]), the side effect function runs once after the initial render.
-  // We use this option whenever we fetch data on component load
-  useEffect(()=>{
-    console.log('I run only once because I have a empty dependency array')
-    // With nothing in the dependency array this only runs one
+  // 2. If the dependency array is empty [], the side effect function runs once after the initial render
+  useEffect(() => {
+    console.log('I run only once because I have an empty dependency array')
   }, [])
 
-  // 3) If dependencies are included, the side effect function runs whenever the dependency data changes.
-  useEffect(()=> {
+  // 3. If dependencies are included, this side effect function runs whenever the dependency data changes
+  useEffect(() => {
     console.log('I have a dependency, I will run on component mount and whenever the item in my dependency array changes')
 
-    const colors = ['red', 'yellow', 'blue', 'orange']
-    const randomColorIndex = Math.floor(Math.random() * colors.length)
-    console.log(randomColorIndex, 'random Index')
-    setColor(colors[randomColorIndex])
-  },[city]) // This will only run again whenever the state in the dependency array changes
-
-
-  useEffect(() => {
-    // Define a fetch function:
-    const fetchDefaultData = async () => {
-      const data = await weatherService.show('New York');
-      const newWeatherState = {
-        location: data.location.name,
-        temperature: data.current.temp_f,
-        condition: data.current.condition.text,
-      };
-      setWeather(newWeatherState);
-    };
-
-    // Call the fetch function when the page loads:
-    fetchDefaultData();
-  }, []); // an empty dependency array means this runs once after the initial render
-
+    // const colors = ['red', 'yellow', 'blue', 'orange']
+    // const randomColorIndex = Math.floor(Math.random() * colors.length)
+    // console.log(randomColorIndex, 'random index')
+    // setColor(colors[randomColorIndex])
+  }, [city])
+  
   return (
     <section>
       <h2>Search</h2>
@@ -60,6 +42,7 @@ const WeatherSearch = (props) => {
           id="city"
           type="text"
           value={city}
+          style={{color: color}}
           onChange={(e) => setCity(e.target.value)}
         />
         <button type="submit">Search</button>

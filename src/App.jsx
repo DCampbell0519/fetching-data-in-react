@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 // * is saying export that entire object from the file and store it in the weatherService variable, weatherService/show('Los Angeles)
 import * as weatherService from './services/weatherService'
 import WeatherSearch from './components/WeatherSearch/WeatherSearch.jsx'
@@ -20,6 +20,21 @@ function App() {
     }
     setWeather(newWeatherState)
   }
+
+  useEffect(() => {
+    const fetchDefaultData = async () => {
+      const data = await weatherService.show('Los Angeles')
+      console.log(data)
+      const newWeatherState = {
+        location: data.location.name,
+        temperature: data.current.temp_f,
+        condition: data.current.condition.text,
+      }
+      setWeather(newWeatherState)
+      }
+
+      fetchDefaultData()
+  }, []) // so only run one time to fetch data on the load
 
   return (
     <main>
